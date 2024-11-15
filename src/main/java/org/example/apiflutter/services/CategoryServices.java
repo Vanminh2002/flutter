@@ -6,9 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.example.apiflutter.dto.request.CategoryRequest;
 import org.example.apiflutter.dto.response.CategoryResponse;
 import org.example.apiflutter.entity.Category;
-import org.example.apiflutter.exception.AppException;
 import org.example.apiflutter.exception.CategoryException;
-import org.example.apiflutter.exception.ErrorCode;
 import org.example.apiflutter.mapper.CategoryMapper;
 import org.example.apiflutter.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -39,14 +37,18 @@ public class CategoryServices {
     }
 
     //
+//    public CategoryResponse getById(Long id) {
+//
+//
+//        return categoryMapper.toCategoryResponse(categoryRepository.findById(id)
+//                .orElseThrow(() -> new CategoryException("Category Not Found")));
+//
+//    }
+
     public CategoryResponse getById(Long id) {
-
-
         return categoryMapper.toCategoryResponse(categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryException("Category Not Found")));
-
     }
-
     //
     public CategoryResponse updateCategory(Long id, CategoryRequest categoryRequest) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryException("Category Not Found"));

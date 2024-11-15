@@ -12,10 +12,18 @@ public interface ProductMapper {
 
     Product toProduct(ProductRequest productRequest);
 
+
     ProductRequest toProductRequest(Product product);
 
-//    @Mapping(target = "image",source = "file")
+
     ProductResponse toProductResponse(Product product);
 
+
+    Product toProductFromResponse(ProductResponse productResponse);
+
+
     void updateProduct(@MappingTarget Product product, ProductRequest productRequest);
+
+
+
 }

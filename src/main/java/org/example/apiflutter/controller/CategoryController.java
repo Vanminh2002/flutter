@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.example.apiflutter.dto.request.CategoryRequest;
 import org.example.apiflutter.dto.response.ApiResponse;
 import org.example.apiflutter.dto.response.CategoryResponse;
+import org.example.apiflutter.entity.Category;
 import org.example.apiflutter.services.CategoryServices;
 import org.springframework.web.bind.annotation.*;
 

@@ -47,6 +47,10 @@ public class SecurityConfig {
             "/images/upload",
             "/product/{id}",
             "/file",
+            "/cart-items",
+            "/cart-items/add",
+            "/cart-items",
+            "/cart",
 
             "/category",
             "/category/{id}",

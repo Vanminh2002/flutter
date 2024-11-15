@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -100,6 +101,8 @@ public class ProductServices {
     public Product getById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new ProductException("Product Not Found"));
 //        return productMapper.toProductResponse(productRepository.findById(id).orElseThrow(() -> new ProductException("Product Not Found")));
+
+
     }
 
     public List<Product> getProductByCategory(String category) {
@@ -147,6 +150,22 @@ public class ProductServices {
                     throw new ProductException("Product Not Found");
                 });
     }
+    public ProductResponse getProductResponseById(Long id) {
+        // Lấy sản phẩm từ getById
+        Product product = getById(id);
 
+        // Chuyển từ Product sang ProductResponse
+        ProductResponse productResponse = productMapper.toProductResponse(product);
+
+        // Chuyển danh sách Images thành danh sách ImageResponse
+        List<ImageResponse> imageResponses = product.getImages().stream()
+                .map(imageMapper::toImageResponse).toList();
+
+        // Gán danh sách hình ảnh vào ProductResponse
+        productResponse.setImages(imageResponses);
+
+        // Trả về ProductResponse
+        return productResponse;
+    }
 
 }

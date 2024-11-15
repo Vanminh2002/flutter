@@ -31,6 +31,7 @@ public class ProductController {
     UploadFileServices uploadFileServices;
 
 
+
     @PostMapping
 
     public ApiResponse<Product> createProduct(@Valid @RequestBody ProductRequest productRequest) {
@@ -51,11 +52,11 @@ public class ProductController {
 
     //
     @GetMapping("/{id}")
-    ApiResponse<Product> getById(@PathVariable Long id) {
+    ApiResponse<ProductResponse> getById(@PathVariable Long id) {
 
-        return ApiResponse.<Product>builder()
+        return ApiResponse.<ProductResponse>builder()
                 .message("Success")
-                .result(productServices.getById(id))
+                .result(productServices.getProductResponseById(id))
                 .build();
     }
 
@@ -114,4 +115,5 @@ public ApiResponse<List<Product>> getProductByBrand(@RequestParam String brand) 
                 .result(productServices.getProductByCategory(category))
                 .build();
     }
+
 }

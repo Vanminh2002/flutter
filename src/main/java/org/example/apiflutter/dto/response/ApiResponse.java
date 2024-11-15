@@ -20,7 +20,15 @@ public class ApiResponse<T> {
     String message;
     T result;
 
-
-    public ApiResponse(String s, ProductRequest productDto) {
+    public static <T> ApiResponse<T> success(T result) {
+        return new ApiResponse<>(200, "Success", result);
     }
+
+    public static <T> ApiResponse<T> error(String message) {
+        return new ApiResponse<>(400, message, null);
+    }
+
+
+//    public ApiResponse(String s, ProductRequest productDto) {
+//    }
 }
