@@ -1,5 +1,6 @@
 package org.example.apiflutter.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,8 +21,11 @@ public class Images {
     String fileName;
     String filePath;
     String fileType;
+
+
     @Lob
     Blob image;
+
     String downloadUrl;
     @ManyToOne
     @JoinColumn(name = "product_id")

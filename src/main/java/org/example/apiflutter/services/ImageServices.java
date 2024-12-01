@@ -47,6 +47,7 @@ public class ImageServices {
                 Images images = new Images();
                 images.setFileName(file.getOriginalFilename());
                 images.setFileType(file.getContentType());
+//                images.setImage(new SerialBlob(file.getBytes()));
                 images.setImage(new SerialBlob(file.getBytes()));
                 images.setProducts(product);
 

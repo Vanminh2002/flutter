@@ -21,7 +21,7 @@ public class CartItemController {
     CartItemService cartItemService;
     private final CartService cartService;
 
-
+ /* 16-11-2024
     @PostMapping("/add")
     public ApiResponse<CartItem> addItemToCart(
             @RequestParam(required = false) Long cartId,
@@ -40,14 +40,31 @@ public class CartItemController {
         }
     }
 
-    @DeleteMapping("/{cartId}/items/{productId}")
-    public ApiResponse<Void> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long productId) {
-        return cartItemService.removeItemFromCart(cartId, productId);
+    @DeleteMapping("/{cartId}/item/{itemId}/remove")
+    public ApiResponse<CartItem> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId) {
+        return cartItemService.removeItemFromCart(cartId, itemId);
     }
 
     @PutMapping("/{cartId}/items/{productId}")
-    public ApiResponse<CartItem> updateQuantity(@PathVariable Long cartId, @PathVariable Long productId, @RequestParam Integer quantity) {
+    public ApiResponse<CartItem> updateQuantity(@PathVariable Long cartId,
+                                                @PathVariable Long productId,
+                                                @RequestParam Integer quantity) {
+//        ApiResponse<CartItem> response = cartItemService.updateQuantity(cartId, productId, quantity);
         return cartItemService.updateQuantity(cartId, productId, quantity);
+//        return cartItemService.updateQuantity(cartId, productId, quantity);
+//        try {
+//            if (cartId == null) {
+//                cartId = cartService.initializeNewCart();
+//            }
+//            // Gọi phương thức service để thêm sản phẩm vào giỏ hàng
+//            ApiResponse<CartItem> response = cartItemService.updateQuantity(cartId, productId, quantity);
+//            return response;
+//        } catch (Exception e) {
+//            // Xử lý lỗi nếu có
+//            return ApiResponse.error("Unable to add item to cart: " + e.getMessage());
+//        }
     }
+
+  */
 
 }

@@ -3,6 +3,7 @@ package org.example.apiflutter.services;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.aspectj.weaver.ast.Not;
 import org.example.apiflutter.dto.response.ApiResponse;
 import org.example.apiflutter.entity.Cart;
 import org.example.apiflutter.entity.CartItem;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,58 @@ public class CartItemService {
     CartService cartService;
     CartRepository cartRepository;
 
+    public void addToCart(Long cartId, Long productId, Integer quantity) {
+        Cart cart = cartService.getCart(cartId);
+
+        Product product = productServices.getById(productId);
+        CartItem cartItem = cart.getCartItems()
+                .stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst().orElse(new CartItem());
+        if (cartItem.getId() == null) {
+            cartItem.setCart(cart);
+            cartItem.setProduct(product);
+            cartItem.setQuantity(quantity);
+            cartItem.setUnitPrice(product.getPrice());
+        } else {
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+        }
+        cartItem.setTotalPrice();
+        cart.addItem(cartItem);
+        cartItemRepository.save(cartItem);
+        cartRepository.save(cart);
+
+
+    }
+
+    public void removeFromCart(Long cartId, Long productId, Integer quantity) {
+        Cart cart = cartService.getCart(cartId);
+        CartItem removeItem = getCartItem(cartId,productId);
+        cart.removeItem(removeItem);
+
+        cartRepository.save(cart);
+    }
+
+    public void updateCartItem(Long cartId, Long productId, Integer quantity) {
+        Cart cart = cartService.getCart(cartId);
+        cart.getCartItems()
+                .stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst().ifPresent(item -> {
+                    item.setQuantity(quantity);
+                    item.setUnitPrice(item.getProduct().getPrice());
+                    item.setTotalPrice();
+                });
+        BigDecimal totalAmount = cart.getTotalAmount();
+        cart.setTotalAmount(totalAmount);
+        cartRepository.save(cart);
+    }
+    public CartItem getCartItem(Long cartId, Long productId) {
+        Cart cart = cartService.getCart(cartId);
+        return cart.getCartItems()
+                .stream().filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst().orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOTFOUND));
+    }
 //    public void addItemToCart(Long cartId, Long productId, Integer quantity) {
 //        Cart cart = cartService.getCart(cartId);
 //        Product product = productServices.getById(productId);
@@ -46,7 +102,8 @@ public class CartItemService {
 //        cartItemRepository.save(cartItem);
 //        cartRepository.save(cart);
 //    }
-
+//16-11
+    /* 16-11-2024
     public ApiResponse<CartItem> addItemToCart(Long cartId, Long productId, Integer quantity) {
         Cart cart = cartService.getCart(cartId);
         if (cart == null) {
@@ -57,8 +114,39 @@ public class CartItemService {
             return ApiResponse.error("Product not found with id: " + productId);
         }
         // Kiểm tra nếu sản phẩm đã có trong giỏ
-        CartItem cartItem = cart.getCartItems()
-                .stream()
+//        CartItem cartItem = cart.getCartItems()
+//                .stream()
+//                .filter(item -> item.getProduct().getId().equals(productId))
+//                .findFirst()
+//                .orElse(new CartItem());
+//
+//        if (cartItem.getId() == null) {
+//            // Nếu chưa có CartItem, tạo mới
+//
+//            cartItem.setCart(cart);
+//            cartItem.setProduct(product);
+//            cartItem.setQuantity(quantity);
+//            cartItem.setUnitPrice(product.getPrice());
+//        } else {
+//            // Nếu CartItem đã có, cập nhật số lượng
+//            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+//        }
+//
+//        cartItem.setTotalPrice();  // Cập nhật giá trị tổng
+//
+//        cart.addItem(cartItem);    // Thêm vào giỏ hàng
+//        cartItemRepository.save(cartItem);  // Lưu CartItem
+//        cartRepository.save(cart);          // Lưu Cart
+
+        // Trả về ApiResponse
+        List<CartItem> cartItems = cart.getCartItems();
+        if (cartItems == null) {
+//            cartItems = new HashSet<>();  // Khởi tạo nếu chưa có
+            cart.setCartItems(cartItems); // Lưu lại cartItems vào Cart nếu cần
+        }
+
+        // Kiểm tra nếu sản phẩm đã có trong giỏ
+        CartItem cartItem = cartItems.stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst()
                 .orElse(new CartItem());
@@ -78,13 +166,11 @@ public class CartItemService {
 
         cart.addItem(cartItem);    // Thêm vào giỏ hàng
         cartItemRepository.save(cartItem);  // Lưu CartItem
-        cartRepository.save(cart);          // Lưu Cart
-
-        // Trả về ApiResponse
+        cartRepository.save(cart);
         return ApiResponse.success(cartItem);  // Trả về ApiResponse với CartItem mới
     }
 
-    public ApiResponse<Void> removeItemFromCart(Long cartId, Long productId) {
+    public ApiResponse<CartItem> removeItemFromCart(Long cartId, Long productId) {
         try {
             // Lấy giỏ hàng và sản phẩm cần xóa
             Cart cart = cartService.getCart(cartId);
@@ -138,6 +224,8 @@ public class CartItemService {
             return ApiResponse.error("Error updating quantity: " + e.getMessage());
         }
     }
+
+     */
 //    public void removeItemFromCart(Long cartId, Long productId) {
 //        Cart cart = cartService.getCart(cartId);
 //        CartItem cartItemToRemove = getCartItem(cartId, productId);
@@ -161,7 +249,7 @@ public class CartItemService {
 //        cartRepository.save(cart);
 //    }
 
-
+ /* 16-11-2024
     public CartItem getCartItem(Long cartId, Long productId) {
         Cart cart = cartService.getCart(cartId);
         return cart.getCartItems()
@@ -174,4 +262,6 @@ public class CartItemService {
         cartRepository.save(newCart);  // Lưu giỏ hàng vào cơ sở dữ liệu
         return newCart;  // Trả về giỏ hàng mới
     }
+
+  */
 }

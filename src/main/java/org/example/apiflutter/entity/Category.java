@@ -25,7 +25,6 @@ public class Category {
 
     @JsonIgnore
     @OneToMany(mappedBy = "category")
-
     Set<Product> products;
 
 
